@@ -116,8 +116,13 @@ def generate_long_audio(
 
   output = None
   segment_duration = duration
+  nth_segment = 0
+  nb_segment = int(duration/30)
 
   while duration > 0:
+    nth_segment+=1
+    print(f'Segment {nth_segment}/{nb_segment}')
+
     if output is None:  # first pass of long or short song
       if segment_duration > model.lm.cfg.dataset.segment_duration:
         segment_duration = model.lm.cfg.dataset.segment_duration
