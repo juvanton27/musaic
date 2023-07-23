@@ -41,7 +41,7 @@ def main(counter: int):
   
   if attempt > max_attemps:    
     with open('error.log', 'a') as file:
-      file.write(f'{video_path}\n')
+      file.write(f'Project {counter} => {video_path}\n')
   else: 
     print('Job success !')
 
