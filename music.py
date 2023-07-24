@@ -97,7 +97,7 @@ contexts = [
 ]
 
 def create_model():
-  return musicgen.MusicGen.get_pretrained('melody', device='cuda')
+  return musicgen.MusicGen.get_pretrained('small', device='cuda')
 
 def generate_music_sentence():
   style = styles[random.randint(0, len(styles) - 1)]
