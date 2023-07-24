@@ -27,7 +27,6 @@ def main(counter: int):
 
   print("Generating video ...")
   video_path = generate_video(audio_path)
-  video_path = './video_output/video_1690206995.72489.mp4'
 
   max_attemps = 3
   attempt = 1
