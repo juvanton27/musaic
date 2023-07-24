@@ -4,5 +4,5 @@ frames/*
 music_output/*
 video_output/*
 
-error.log
+*.log
 .env

@@ -1,12 +1,13 @@
 import os
 import sys
+from datetime import datetime
 
 from dotenv import load_dotenv
 from music import create_model, generate_long_audio, generate_music_sentence
 from video import generate_video
 from bot import create_bot, upload_video
 
-def main(counter: int):
+def main(counter: int, customCounter: bool = False):
   print(f'Project {counter}')
   print("Generating model ...")
   model = create_model()
@@ -31,6 +32,7 @@ def main(counter: int):
   max_attemps = 3
   attempt = 1
   bot = None
+  title = f'Lazy Project #{counter} - Musaic'
   while attempt <= max_attemps:
     try:
       print(f'Try {attempt}')
@@ -38,7 +40,7 @@ def main(counter: int):
       bot = create_bot()
 
       print("Uploading video ...")
-      upload_video(bot, video_path, f'Lazy Project #{counter} - Musaic')
+      upload_video(bot, video_path, title)
       break
     except Exception as e:
       attempt += 1
@@ -47,13 +49,25 @@ def main(counter: int):
   
   if attempt > max_attemps:    
     with open('error.log', 'a') as file:
-      file.write(f'Project {counter} => {video_path}\n')
+      file.write(f'{count} => {datetime.now().isoformat()}: {title}')
   else: 
+    if not customCounter:
+      with open('service.log', 'a') as file:
+        file.write(f'{count} => {datetime.now().isoformat()}: {title}')
     print('Job success !')
 
 if __name__ == '__main__':
+  log_path = 'service.log'
+  count = 0
+  customCounter = False
+  if len(sys.argv) == 2:
+    try:
+      with open(log_path, 'r') as file:
+        count = int(file.readlines().pop().split(' ')[0])+1
+    except FileNotFoundError:
+      with open(log_path, 'w') as file:
+        count = 0
   if len(sys.argv) == 3:
-    os.environ['MUSAIC_PROJECT_NUMBER'] = sys.argv[2]
-  counter = int(os.environ['MUSAIC_PROJECT_NUMBER'])
-  main(counter)
-  os.environ['MUSAIC_PROJECT_NUMBER'] += 1
+    count = sys.argv[2]
+    customCounter = True
+  main(count, customCounter)

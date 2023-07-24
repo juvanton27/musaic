@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import random
 import os
 
@@ -164,7 +164,7 @@ def generate_long_audio(
       )
 
   audio_output = output.detach().cpu().float()[0]
-  filename = f"music_{datetime.datetime.now().timestamp()}.wav"
+  filename = f"music_{datetime.now().timestamp()}.wav"
   output_path = f"music_output/{filename}"
   torchaudio.save(output_path, audio_output, sample_rate=32000)
   print(f"Song saved to {output_path}")

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os
 
 import numpy as np
@@ -102,7 +102,7 @@ def generate_video(audio_path):
       f'ffmpeg -i ./image.png -i ./frames/frame{frame_number}temp.png -filter_complex "[1:v]scale=1920x1080[bg];[0:v][bg]overlay=format=auto" ./frames/frame{frame_number}.png 2> /dev/null'
     )
 
-  output_path = f"./video_output/video_{datetime.datetime.now().timestamp()}.mp4"
+  output_path = f"./video_output/video_{datetime.now().timestamp()}.mp4"
   os.system(
     f"ffmpeg -y -r {FPS} -f image2 -s 1920x1080 -i ./frames/frame%d.png -i './music_output/'{AUDIO_FILE} -c:v libx264 -pix_fmt yuv420p {output_path} 2> /dev/null"
   )
