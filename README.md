@@ -1,16 +1,14 @@
-### Prerequisite
-
+# Prerequisite
 ## Install ffmpeg
-# on macOS
+### on macOS
 sudo brew install ffmpeg
-# on Linux
+### on Linux
 sudo apt install ffmpeg
-
 ## Install all pip3 requirements
 pip3 install -r requirements.txt
 
-### Define environments variables
+# Define environments variables
 In Chrome, search chrome://version
 
-### Starting application
+# Starting application
 python3 main.py <project_number> <time_in_seconds>
