@@ -23,7 +23,7 @@ def main(counter: int):
   sentence = generate_music_sentence()
 
   print("Generating music ...")
-  audio_path = generate_long_audio(model, sentence, int(sys.argv[2]), topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=10)
+  audio_path = generate_long_audio(model, sentence, int(sys.argv[1]), topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=10)
 
   print("Generating video ...")
   video_path = generate_video(audio_path)
@@ -52,7 +52,8 @@ def main(counter: int):
     print('Job success !')
 
 if __name__ == '__main__':
-  counter = int(sys.argv[1])
-  while True:
-    main(counter)
-    counter += 1
+  if len(sys.argv) == 3:
+    os.environ['MUSAIC_PROJECT_NUMBER'] = sys.argv[2]
+  counter = int(os.environ['MUSAIC_PROJECT_NUMBER'])
+  main(counter)
+  os.environ['MUSAIC_PROJECT_NUMBER'] += 1

@@ -11,4 +11,4 @@ pip3 install -r requirements.txt
 In Chrome, search chrome://version
 
 # Starting application
-python3 main.py <project_number> <time_in_seconds>
+python3 main.py <time_in_seconds> <project_number>
