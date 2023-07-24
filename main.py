@@ -1,6 +1,7 @@
 import os
 import sys
 
+from dotenv import load_dotenv
 from music import create_model, generate_long_audio, generate_music_sentence
 from video import generate_video
 from bot import create_bot, upload_video
@@ -11,7 +12,12 @@ def main(counter: int):
   model = create_model()
 
   print("Cleaning frame repository ...")
+  folders=['frames', 'music_output', 'video_output']
+  for folder in folders:
+    if not os.path.exists(folder):
+      os.mkdir(folder)
   os.system("rm ./frames/*.png")
+  load_dotenv()
 
   print("Generating music sentence ...")
   sentence = generate_music_sentence()
@@ -21,6 +27,7 @@ def main(counter: int):
 
   print("Generating video ...")
   video_path = generate_video(audio_path)
+  video_path = './video_output/video_1690206995.72489.mp4'
 
   max_attemps = 3
   attempt = 1

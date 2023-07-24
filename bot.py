@@ -1,7 +1,7 @@
 import os
 import time
+import platform
 
-import pyautogui
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,17 +12,16 @@ def create_bot() -> webdriver.Chrome:
   options = webdriver.ChromeOptions()
   options.add_argument("--log-level=3")
   options.add_argument(
-    "user-data-dir=/Users/julienvantongerloo/Library/Application\ Support/Google/Chrome\ Beta/Default"
+    f"user-data-dir={os.getenv('USER_DATA_DIR')}"
   )
-  options.binary_location = (
-    "/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta"
-  )
+  if platform.system() == 'Darwin':
+    options.binary_location = os.getenv('BINARY_LOCATION')
 
-  chromedriver_path = "/opt/homebrew/bin/chromedriver"
+  chromedriver_path = os.getenv('CHROMEDRIVER_PATH')
   os.environ["PATH"] += os.pathsep + chromedriver_path
 
-  return webdriver.Chrome(options=options)
-
+  # return webdriver.Chrome(options) if platform.system() == 'Darwin' else webdriver.Chrome() if platform.system() == 'Linux' else webdriver.Chrome()
+  return webdriver.Chrome(options)
 
 def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
   bot.get("https://studio.youtube.com")
@@ -32,15 +31,10 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
   )
   upload_button.click()
 
-  file_input = WebDriverWait(bot, 10).until(
-    EC.visibility_of_element_located((By.XPATH, '//*[@id="select-files-button"]'))
-  )
-  file_input.click()
-
+  time.sleep(2)
   abs_path = os.path.abspath(video_path)
-  pyautogui.hotkey("command", "shift", "g")
-  pyautogui.write(abs_path)
-  pyautogui.press("enter")
+  print(abs_path)
+  bot.find_element(By.NAME, 'Filedata').send_keys(abs_path)
 
   title_input = WebDriverWait(bot, 10).until(
     EC.visibility_of_element_located(
@@ -59,12 +53,6 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
   for i in range(3):
       next_button.click()
       time.sleep(1)
-
-  public_button = WebDriverWait(bot, 10).until(
-    EC.visibility_of_element_located((By.NAME, "PUBLIC"))
-  )
-  public_button.click()
-  time.sleep(1)
 
   done_button = WebDriverWait(bot, 10).until(
     EC.visibility_of_element_located((By.XPATH, '//*[@id="done-button"]'))

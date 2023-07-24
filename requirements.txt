@@ -1,0 +1,10 @@
+audiocraft
+torch
+torchaudio
+kaleido
+numpy
+plotly
+tqdm
+scipy
+selenium
+python-dotenv

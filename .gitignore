@@ -1,5 +1,8 @@
+__pycache__
+
 frames/*
 music_output/*
 video_output/*
 
 error.log
+.env

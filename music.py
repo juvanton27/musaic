@@ -1,5 +1,6 @@
 import datetime
 import random
+import os
 
 import torch
 import torchaudio
@@ -96,7 +97,7 @@ contexts = [
 ]
 
 def create_model():
-  return musicgen.MusicGen.get_pretrained('melody', device='cpu')
+  return musicgen.MusicGen.get_pretrained('melody', device='cuda')
 
 def generate_music_sentence():
   style = styles[random.randint(0, len(styles) - 1)]
