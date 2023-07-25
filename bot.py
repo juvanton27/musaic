@@ -10,7 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 def create_bot() -> webdriver.Chrome:
   options = webdriver.ChromeOptions()
-  options.add_argument("--log-level=3")
+  options.add_argument("--headless=new")
   options.add_argument(
     f"user-data-dir={os.getenv('USER_DATA_DIR')}"
   )

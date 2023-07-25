@@ -43,6 +43,7 @@ def main(counter: int, customCounter: bool = False):
       upload_video(bot, video_path, title)
       break
     except Exception as e:
+      print(e)
       attempt += 1
       if bot is not None:
         bot.quit()
@@ -63,10 +64,11 @@ if __name__ == '__main__':
   if len(sys.argv) == 2:
     try:
       with open(log_path, 'r') as file:
-        if len(file.readlines()) == 0:
+        lines = file.readlines()
+        if len(lines) == 0:
           count = 1
         else: 
-          count = int(file.readlines().pop().split(' ')[0])+1
+          count = int(lines.pop().split(' ')[0])+1
     except FileNotFoundError:
       with open(log_path, 'w') as file:
         count = 0
