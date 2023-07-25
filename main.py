@@ -63,7 +63,10 @@ if __name__ == '__main__':
   if len(sys.argv) == 2:
     try:
       with open(log_path, 'r') as file:
-        count = int(file.readlines().pop().split(' ')[0])+1
+        if len(file.readlines()) == 0:
+          count = 1
+        else: 
+          count = int(file.readlines().pop().split(' ')[0])+1
     except FileNotFoundError:
       with open(log_path, 'w') as file:
         count = 0
