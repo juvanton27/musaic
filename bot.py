@@ -51,8 +51,8 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
     EC.visibility_of_element_located((By.XPATH, '//*[@id="next-button"]'))
   )
   for i in range(3):
-      next_button.click()
-      time.sleep(1)
+    next_button.click()
+    time.sleep(1)
 
   done_button = WebDriverWait(bot, 10).until(
     EC.visibility_of_element_located((By.XPATH, '//*[@id="done-button"]'))

@@ -6,6 +6,8 @@ sudo brew install ffmpeg
 sudo apt install ffmpeg
 ## Install all pip3 requirements
 pip3 install -r requirements.txt
+## Install Nvidia driver (Ubuntu with GPU)
+sudo ubuntu-drivers autoinstall
 
 # Define environments variables
 In Chrome, search chrome://version and whereis chromedriver
