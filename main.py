@@ -29,6 +29,7 @@ def main(counter: int, customCounter: bool = False):
   print("Generating video ...")
   video_path = generate_video(audio_path)
 
+  # Video upload
   max_attemps = 3
   attempt = 1
   bot = None
@@ -55,7 +56,36 @@ def main(counter: int, customCounter: bool = False):
     if not customCounter:
       with open('service.log', 'a') as file:
         file.write(f'{count} => {datetime.now().isoformat()}: {title}')
-    print('Job success !')
+    print('Video successfully uploaded !')
+
+  # Short upload
+  max_attemps = 3
+  attempt = 1
+  bot = None
+  title = f'Lazy Project #{counter} - Musaic #Shorts'
+  while attempt <= max_attemps:
+    try:
+      print(f'Try {attempt}')
+      print("Generating bot ...")
+      bot = create_bot()
+
+      print("Uploading video ...")
+      upload_video(bot, video_path, title, short=True)
+      break
+    except Exception as e:
+      print(e)
+      attempt += 1
+      if bot is not None:
+        bot.quit()
+  
+  if attempt > max_attemps:    
+    with open('error.log', 'a') as file:
+      file.write(f'{count} => {datetime.now().isoformat()}: {title}')
+  else: 
+    if not customCounter:
+      with open('service.log', 'a') as file:
+        file.write(f'{count} => {datetime.now().isoformat()}: {title}')
+    print('Short successfully uploaded !')
 
 if __name__ == '__main__':
   log_path = 'service.log'

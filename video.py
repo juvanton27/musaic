@@ -107,5 +107,13 @@ def generate_video(audio_path):
     f"ffmpeg -y -r {FPS} -f image2 -s 1920x1080 -i ./frames/frame%d.png -i './music_output/'{AUDIO_FILE} -c:v libx264 -pix_fmt yuv420p {output_path} 2> /dev/null"
   )
   print(f"Video saved to {output_path}")
-  print("\n")
+  return output_path
+
+def generate_short(video_path: str) -> str:
+  print('Generating short...')
+  temp_output_path = video_path.replace('video_', 'temp_', 2).replace('temp_', 'video_', 1)
+  output_path = video_path.replace('video_', 'short_', 2).replace('short_', 'video_', 1)
+  os.system(f'ffmpeg -i {video_path} -t 30 {temp_output_path} 2> /dev/null')
+  os.system(f'ffmpeg -i {temp_output_path} -vf "scale=608:1080:force_original_aspect_ratio=decrease,pad=608:1080:-1:-1:color=#f1efe7" {output_path} 2> /dev/null')
+  os.remove(temp_output_path)
   return output_path
