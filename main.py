@@ -4,7 +4,7 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 from music import create_model, generate_long_audio, generate_music_sentence
-from video import generate_video
+from video import generate_video, generate_short
 from bot import create_bot, upload_video
 
 def main(counter: int, customCounter: bool = False):
@@ -28,64 +28,49 @@ def main(counter: int, customCounter: bool = False):
 
   print("Generating video ...")
   video_path = generate_video(audio_path)
+  
+  print("Generating short ...")
+  short_path = generate_short(video_path)
 
   # Video upload
-  max_attemps = 3
-  attempt = 1
   bot = None
   title = f'Lazy Project #{counter} - Musaic'
-  while attempt <= max_attemps:
-    try:
-      print(f'Try {attempt}')
-      print("Generating bot ...")
-      bot = create_bot()
+  try:
+    print("Generating bot ...")
+    bot = create_bot()
 
-      print("Uploading video ...")
-      upload_video(bot, video_path, title)
-      break
-    except Exception as e:
-      print(e)
-      attempt += 1
-      if bot is not None:
-        bot.quit()
-  
-  if attempt > max_attemps:    
-    with open('error.log', 'a') as file:
-      file.write(f'{count} => {datetime.now().isoformat()}: {title}')
-  else: 
+    print("Uploading video ...")
+    upload_video(bot, video_path, title)
     if not customCounter:
       with open('service.log', 'a') as file:
         file.write(f'{count} => {datetime.now().isoformat()}: {title}')
     print('Video successfully uploaded !')
-
-  # Short upload
-  max_attemps = 3
-  attempt = 1
-  bot = None
-  title = f'Lazy Project #{counter} - Musaic #Shorts'
-  while attempt <= max_attemps:
-    try:
-      print(f'Try {attempt}')
-      print("Generating bot ...")
-      bot = create_bot()
-
-      print("Uploading video ...")
-      upload_video(bot, video_path, title, short=True)
-      break
-    except Exception as e:
-      print(e)
-      attempt += 1
-      if bot is not None:
-        bot.quit()
-  
-  if attempt > max_attemps:    
+  except Exception as e:
+    print(e)
     with open('error.log', 'a') as file:
       file.write(f'{count} => {datetime.now().isoformat()}: {title}')
-  else: 
+    if bot is not None:
+        bot.quit()
+
+  # Short upload
+  bot = None
+  title = f'Lazy Project #{counter} - Musaic #Shorts'
+  try:
+    print("Generating bot ...")
+    bot = create_bot()
+
+    print("Uploading video ...")
+    upload_video(bot, short_path, title)
     if not customCounter:
       with open('service.log', 'a') as file:
         file.write(f'{count} => {datetime.now().isoformat()}: {title}')
     print('Short successfully uploaded !')
+  except Exception as e:
+    print(e)
+    with open('error.log', 'a') as file:
+      file.write(f'{count} => {datetime.now().isoformat()}: {title}')
+    if bot is not None:
+      bot.quit()
 
 if __name__ == '__main__':
   log_path = 'service.log'
