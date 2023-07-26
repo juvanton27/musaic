@@ -6,3 +6,5 @@ video_output/*
 
 *.log
 .env
+
+test.py

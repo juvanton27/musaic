@@ -119,6 +119,7 @@ def generate_long_audio(
   segment_duration = duration
   nth_segment = 0
   nb_segment = int(duration/30)
+  full_duration = duration
 
   while duration > 0:
     nth_segment+=1
@@ -164,8 +165,13 @@ def generate_long_audio(
       )
 
   audio_output = output.detach().cpu().float()[0]
+  temp_filename = f"music_{datetime.now().timestamp()}.wav"
+  temp_output_path = f"music_output/{temp_filename}"
   filename = f"music_{datetime.now().timestamp()}.wav"
   output_path = f"music_output/{filename}"
-  torchaudio.save(output_path, audio_output, sample_rate=32000)
+  torchaudio.save(temp_output_path, audio_output, sample_rate=32000)
+  print('Applying fade effects...')
+  os.system(f'ffmpeg -i {temp_output_path} -af "afade=t=in:st=0:d=5,afade=t=out:st={full_duration-10}:d=10" {output_path} 2> /dev/null')
+  os.remove(temp_output_path)
   print(f"Song saved to {output_path}")
   return filename
