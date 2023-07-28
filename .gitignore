@@ -8,3 +8,4 @@ video_output/*
 .env
 
 test.py
+user_data.tar.gz
