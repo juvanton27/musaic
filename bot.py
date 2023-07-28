@@ -26,17 +26,13 @@ def create_bot() -> webdriver.Chrome:
 
 def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
   bot.get("https://studio.youtube.com")
-  print('Went to site')
 
   try:
     upload_button = WebDriverWait(bot, 10).until(
       EC.visibility_of_element_located((By.XPATH, '//*[@id="upload-icon"]'))
     )
-    print('found upload button')
     upload_button.click()
-    print('clicked on it')
     time.sleep(2)
-    print('slept 2 sec')
   except:
     print('Not logged')
     bot.quit()
@@ -46,7 +42,6 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
     abs_path = os.path.abspath(video_path)
     print(abs_path)
     bot.find_element(By.NAME, 'Filedata').send_keys(abs_path)
-    print('sent file')
   except:
     print('Uploading video failed')
     bot.quit()
@@ -61,13 +56,9 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
         )
       )
     )
-    print(title_input)
     title_input.clear()
-    print('input cleared')
     title_input.send_keys(title)
-    print('add input')
     time.sleep(2)
-    print('slept 2 sec')
   except:
     print('Changing title failed')
     bot.quit()
