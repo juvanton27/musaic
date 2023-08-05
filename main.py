@@ -43,12 +43,12 @@ def main(counter: int, customCounter: bool = False):
     upload_video(bot, video_path, title)
     if not customCounter:
       with open('service.log', 'a') as file:
-        file.write(f'{count} => {datetime.now().isoformat()}: {title}')
+        file.write(f'{count} => {datetime.now().isoformat()}: {title}\n')
     print('Video successfully uploaded !')
   except Exception as e:
     print(e)
     with open('error.log', 'a') as file:
-      file.write(f'{count} => {datetime.now().isoformat()}: {title}')
+      file.write(f'{count} => {datetime.now().isoformat()}: {title}\n')
     if bot is not None:
         bot.quit()
 
