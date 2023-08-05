@@ -52,7 +52,7 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
       EC.visibility_of_element_located(
         (
           By.CSS_SELECTOR,
-          "div.input-container.title.style-scope.ytcp-video-metadata-editor-basics ytcp-social-suggestions-textbox#title-textarea div#child-input div#textbox",
+          "div.input-container.title.style-scope.ytcp-video-metadata-editor-basics div#textbox",
         )
       )
     )
@@ -69,7 +69,7 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
       EC.visibility_of_element_located(
         (
           By.XPATH,
-          '//button[@test-id=REVIEW]'
+          '//button[@id="step-badge-3"]'
         )
       )
     )
@@ -87,8 +87,8 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
     done_button = WebDriverWait(bot, 10).until(
       EC.visibility_of_element_located(
         (
-          By.CSS_SELECTOR,
-          "ytcp-animatable.button-area.metadata-fade-in-section.style-scope.ytcp-uploads-dialog div.inner-button-area.style-scope.ytcp-uploads-dialog div.right-button-area.style-scope.ytcp-uploads-dialog ytcp-button#done-button"
+          By.XPATH,
+          '//ytcp-button[@id="done-button"]'
         )
       )
     )
