@@ -15,9 +15,9 @@ def main(counter: int, customCounter: bool = False):
   print("Cleaning frame repository ...")
   folders=['frames', 'music_output', 'video_output']
   for folder in folders:
-    if not os.path.exists(folder):
-      os.mkdir(folder)
-  os.system("rm ./frames/*.png")
+    if not os.path.exists(os.path.join(os.path.dirname(__file__), folder)):
+      os.mkdir(os.path.join(os.path.dirname(__file__), folder))
+  os.system(f"rm {os.path.join(os.path.dirname(__file__), 'frames/*.png')}")
   load_dotenv()
 
   print("Generating music sentence ...")
@@ -42,12 +42,12 @@ def main(counter: int, customCounter: bool = False):
     print("Uploading video ...")
     upload_video(bot, video_path, title)
     if not customCounter:
-      with open('service.log', 'a') as file:
+      with open(os.path.join(os.path.dirname(__file__), 'service.log'), 'a') as file:
         file.write(f'{count} => {datetime.now().isoformat()}: {title}\n')
     print('Video successfully uploaded !')
   except Exception as e:
     print(e)
-    with open('error.log', 'a') as file:
+    with open(os.path.join(os.path.dirname(__file__), 'error.log'), 'a') as file:
       file.write(f'{count} => {datetime.now().isoformat()}: {title}\n')
     if bot is not None:
         bot.quit()
@@ -62,18 +62,19 @@ def main(counter: int, customCounter: bool = False):
     print("Uploading video ...")
     upload_video(bot, short_path, title)
     if not customCounter:
-      with open('service.log', 'a') as file:
+      with open(os.path.join(os.path.dirname(__file__), 'service.log'), 'a') as file:
         file.write(f'{count} => {datetime.now().isoformat()}: {title}\n')
     print('Short successfully uploaded !')
   except Exception as e:
     print(e)
-    with open('error.log', 'a') as file:
+    with open(os.path.join(os.path.dirname(__file__), 'error.log'), 'a') as file:
       file.write(f'{count} => {datetime.now().isoformat()}: {title}\n')
     if bot is not None:
       bot.quit()
 
 if __name__ == '__main__':
-  log_path = 'service.log'
+  log_path = os.path.join(os.path.dirname(__file__), 'service.log')
+  print(log_path)
   count = 0
   customCounter = False
   if len(sys.argv) == 2:

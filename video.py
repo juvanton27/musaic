@@ -8,7 +8,7 @@ from scipy.io import wavfile
 
 
 def generate_video(audio_path):
-  PATH = "./music_output"
+  PATH = os.path.join(os.path.dirname(__file__), "music_output")
 
   # Configuration
   FPS = 30
@@ -97,22 +97,22 @@ def generate_video(audio_path):
     fft = np.abs(fft) / mx
 
     fig = plot_fft(fft.real, xf, fs, RESOLUTION)
-    fig.write_image(f"./frames/frame{frame_number}temp.png", scale=2)
+    fig.write_image(os.path.join(os.path.dirname(__file__), f"frames/frame{frame_number}temp.png"), scale=2)
     os.system(
-      f'ffmpeg -i ./image.png -i ./frames/frame{frame_number}temp.png -filter_complex "[1:v]scale=1920x1080[bg];[0:v][bg]overlay=format=auto" ./frames/frame{frame_number}.png 2> /dev/null'
+      f"ffmpeg -i {os.path.join(os.path.dirname(__file__), 'image.png')} -i {os.path.join(os.path.dirname(__file__), f'frames/frame{frame_number}temp.png')} -filter_complex \"[1:v]scale=1920x1080[bg];[0:v][bg]overlay=format=auto\" {os.path.join(os.path.dirname(__file__), f'frames/frame{frame_number}.png')} 2> /dev/null"
     )
 
-  output_path = f"./video_output/video_{datetime.now().timestamp()}.mp4"
+  output_path = os.path.join(os.path.dirname(__file__), f"video_output/video_{datetime.now().timestamp()}.mp4")
   os.system(
-    f"ffmpeg -y -r {FPS} -f image2 -s 1920x1080 -i ./frames/frame%d.png -i './music_output/'{AUDIO_FILE} -c:v libx264 -pix_fmt yuv420p {output_path} 2> /dev/null"
+    f"ffmpeg -y -r {FPS} -f image2 -s 1920x1080 -i '{os.path.join(os.path.dirname(__file__), 'frames/frame%d.png')}' -i '{os.path.join(os.path.dirname(__file__), f'music_output/{AUDIO_FILE}')}' -c:v libx264 -pix_fmt yuv420p {output_path} 2> /dev/null"
   )
   print(f"Video saved to {output_path}")
   return output_path
 
 def generate_short(video_path: str) -> str:
   print('Generating short...')
-  temp_output_path = video_path.replace('video_', 'temp_', 2).replace('temp_', 'video_', 1)
-  output_path = video_path.replace('video_', 'short_', 2).replace('short_', 'video_', 1)
+  temp_output_path = os.path.join(os.path.dirname(__file__), video_path.replace('video_', 'temp_', 2).replace('temp_', 'video_', 1))
+  output_path = os.path.join(os.path.dirname(__file__), video_path.replace('video_', 'short_', 2).replace('short_', 'video_', 1))
   os.system(f'ffmpeg -i {video_path} -t 30 {temp_output_path} 2> /dev/null')
   os.system(f'ffmpeg -i {temp_output_path} -vf "scale=608:1080:force_original_aspect_ratio=decrease,pad=608:1080:-1:-1:color=#f1efe7" {output_path} 2> /dev/null')
   os.remove(temp_output_path)

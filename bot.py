@@ -39,7 +39,7 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
     return
 
   try:
-    abs_path = os.path.abspath(video_path)
+    abs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), video_path))
     print(abs_path)
     bot.find_element(By.NAME, 'Filedata').send_keys(abs_path)
   except:
@@ -73,11 +73,8 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
         )
       )
     )
-    print('found visibility button')
     visibility_button.click()
-    print('clicked on it')
     time.sleep(1)
-    print('slept 1 sec')
   except:
     print('Finding visibility button failed')
     bot.quit()
@@ -92,11 +89,8 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
         )
       )
     )
-    print('found done button')
     done_button.click()
-    print('clicked on it')
     time.sleep(5)
-    print('slept 5 sec')
   except:
     print('Finding done button failed')
     bot.quit()
@@ -104,3 +98,28 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
 
   bot.quit()
   print('quit')
+
+def upload_tiktok(bot: webdriver.Chrome, video_path: str, title: str):
+  bot.get('https://www.tiktok.com/upload?lang=fr')
+  time.sleep(40)
+
+  try:
+    abs_path = os.path.abspath(video_path)
+    bot.find_element(By.XPATH, '//input[@type="file"]').send_keys(abs_path)
+  except:
+    print('Uploading video failed')
+    bot.quit()
+    return
+  
+  try:
+    title_input = WebDriverWait(bot, 10).until(
+      EC.visibility_of_element_located((By.XPATH, '//*[@data-text="true"]'))
+    )
+    title_input.clear()
+    title_input.send_keys(title)
+    time.sleep(2)
+  except:
+    print('Changing title failed')
+    bot.quit()
+    return
+  

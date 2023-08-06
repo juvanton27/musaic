@@ -166,9 +166,9 @@ def generate_long_audio(
 
   audio_output = output.detach().cpu().float()[0]
   temp_filename = f"music_{datetime.now().timestamp()}.wav"
-  temp_output_path = f"music_output/{temp_filename}"
+  temp_output_path = os.path.join(os.path.dirname(__file__), f"music_output/{temp_filename}")
   filename = f"music_{datetime.now().timestamp()}.wav"
-  output_path = f"music_output/{filename}"
+  output_path = os.path.join(os.path.dirname(__file__), f"music_output/{filename}")
   torchaudio.save(temp_output_path, audio_output, sample_rate=32000)
   
   print('Applying fade effects...')
