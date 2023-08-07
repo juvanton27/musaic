@@ -90,12 +90,12 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
       )
     )
     done_button.click()
-    time.sleep(5)
+    print('Waiting 1 minute for file from being uploaded ...')
+    time.sleep(60)
   except:
     print('Finding done button failed')
     bot.quit()
     return
-
   bot.quit()
 
 def upload_tiktok(bot: webdriver.Chrome, video_path: str, title: str):
