@@ -97,7 +97,6 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
     return
 
   bot.quit()
-  print('quit')
 
 def upload_tiktok(bot: webdriver.Chrome, video_path: str, title: str):
   bot.get('https://www.tiktok.com/upload?lang=fr')
