@@ -9,7 +9,7 @@ input_path = os.path.join(os.path.dirname(__file__), 'input')
 output_path = os.path.join(os.path.dirname(__file__), 'output')
 
 def cleaned_sentence(sentence: str) -> str:
-  sentence = sentence.replace('\'s', ' is')
+  sentence = sentence.replace('\'', " ")
   max_line_length = 20  # Adjust as needed
 
   # Split the text into lines of max_line_length characters or less
@@ -40,8 +40,8 @@ def generate_video(theme: str, first_part: str, second_part: str, video_path: st
     drawtext=text=\'@loveisntreal\':x=(w-tw)/2:y=4*(h-th)/5:fontsize=w/25:fontcolor=white:fontfile={os.path.join(input_path, "fonts/Poppins/Poppins-Regular.ttf")}" -c:v libx264 -c:a copy {output_file}', 
     shell= True, stderr=subprocess.DEVNULL
   )
-  if os.path.getsize(output_file) == 0:
-    print(f'Generating {first_part} not succeeded !')
+  if not os.path.exists(output_file) or (os.path.exists(output_file) and os.path.getsize(output_file) == 0):
+    raise Exception(f'Generating {first_part} not succeeded !')
 
 if not os.path.exists(output_path):
   os.mkdir(output_path)
@@ -56,4 +56,8 @@ with open('data.csv', 'r') as csv_file:
   for row in csv_reader:
     theme, first_part, second_part = row
     video_path = os.path.join(video_folder, random.choice(file_list))
-    generate_video(theme, first_part, second_part, video_path)
+    try:
+      generate_video(theme, first_part, second_part, video_path)
+    except Exception as e:
+      print(e)
+    break
