@@ -60,4 +60,3 @@ with open('data.csv', 'r') as csv_file:
       generate_video(theme, first_part, second_part, video_path)
     except Exception as e:
       print(e)
-    break
