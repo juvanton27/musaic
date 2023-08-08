@@ -4,9 +4,12 @@ __pycache__
 frames/*
 music_output/*
 video_output/*
+input/*
+output
 
 *.log
 .env
+*.csv
 
 test.py
 user_data.tar.gz
