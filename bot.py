@@ -21,7 +21,6 @@ def create_bot() -> webdriver.Chrome:
   chromedriver_path = os.getenv('CHROMEDRIVER_PATH')
   os.environ["PATH"] += os.pathsep + chromedriver_path
 
-  # return webdriver.Chrome(options) if platform.system() == 'Darwin' else webdriver.Chrome() if platform.system() == 'Linux' else webdriver.Chrome()
   return webdriver.Chrome(options)
 
 def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
@@ -81,7 +80,7 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
     return 
 
   try:
-    done_button = WebDriverWait(bot, 10).until(
+    done_button = WebDriverWait(bot, 120).until(
       EC.visibility_of_element_located(
         (
           By.XPATH,
@@ -100,12 +99,16 @@ def upload_video(bot: webdriver.Chrome, video_path: str, title: str):
 
 def upload_tiktok(bot: webdriver.Chrome, video_path: str, title: str):
   bot.get('https://www.tiktok.com/upload?lang=fr')
+  print('site joined')
   time.sleep(40)
 
   try:
     abs_path = os.path.abspath(video_path)
+    print(abs_path)
     bot.find_element(By.XPATH, '//input[@type="file"]').send_keys(abs_path)
-  except:
+    print('input found')
+  except Exception as e:
+    print(e)
     print('Uploading video failed')
     bot.quit()
     return
@@ -114,10 +117,15 @@ def upload_tiktok(bot: webdriver.Chrome, video_path: str, title: str):
     title_input = WebDriverWait(bot, 10).until(
       EC.visibility_of_element_located((By.XPATH, '//*[@data-text="true"]'))
     )
+    print('title input found')
     title_input.clear()
+    print('title cleared')
     title_input.send_keys(title)
+    print('title changed')
     time.sleep(2)
-  except:
+    print('slept 2 sec')
+  except Exception as e:
+    print(e)
     print('Changing title failed')
     bot.quit()
     return
