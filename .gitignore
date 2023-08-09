@@ -12,4 +12,4 @@ output
 *.csv
 
 test.py
-user_data.tar.gz
+.DS_Store
