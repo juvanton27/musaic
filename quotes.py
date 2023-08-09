@@ -51,12 +51,12 @@ with open(data_path, 'r') as csv_file:
   csv_reader = csv.reader(csv_file, delimiter=';')
   next(csv_reader)
   # Create song model
-  print('Generating model')
+  print('Generating model...')
   model = create_model()
   sentence = 'chill love piano song'
   for row in csv_reader:
     theme, first_part, second_part = row
-    print(f'Generating {first_part} ...')
+    print(f'Generating {first_part}')
     audio_path = os.path.join(os.path.dirname(__file__), 'music_output', generate_long_audio(model, sentence, duration, topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=10, fade=False))
     video_path = os.path.join(video_folder, random.choice(file_list))
     try:
