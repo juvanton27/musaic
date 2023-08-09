@@ -111,7 +111,7 @@ def generate_music_sentence():
   return description
 
 def generate_long_audio(
-  model, text, duration, topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=5
+  model, text, duration, topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=5, fade=True
 ):
   topk = int(topk)
 
@@ -171,9 +171,12 @@ def generate_long_audio(
   output_path = os.path.join(os.path.dirname(__file__), f"music_output/{filename}")
   torchaudio.save(temp_output_path, audio_output, sample_rate=32000)
   
-  print('Applying fade effects...')
-  os.system(f'ffmpeg -i {temp_output_path} -af "afade=t=in:st=0:d=5,afade=t=out:st={full_duration-10}:d=10" {output_path} 2> /dev/null')
-  os.remove(temp_output_path)
+  if fade:
+    print('Applying fade effects...')
+    os.system(f'ffmpeg -i {temp_output_path} -af "afade=t=in:st=0:d=5,afade=t=out:st={full_duration-10}:d=10" {output_path} 2> /dev/null')
+    os.remove(temp_output_path)
+  else:
+    os.system(f'mv {temp_output_path} {output_path}')
 
   print(f"Song saved to {output_path}")
   return filename

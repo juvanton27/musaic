@@ -33,8 +33,8 @@ def generate_video(theme: str, first_part: str, second_part: str, video_path: st
     drawtext=text=\'{cleaned_sentence(theme.upper())}\':x=(w-tw)/2:y=(h-th)/5:fontsize=w/20:fontcolor=white:fontfile={os.path.join(input_path, "fonts/Poppins/Poppins-Regular.ttf")},\
     drawtext=text=\'{cleaned_sentence(first_part)}\':x=(w-tw)/2:y=(h-th)/2:fontsize=w/10:fontcolor=white:fontfile={os.path.join(input_path, "fonts/KudryashevDisplay/fontspring-demo-kdp45.otf")}:enable=\'between(t,0,9)\':box=1:boxcolor=black:boxborderw=10:line_spacing=10,\
     drawtext=text=\'{cleaned_sentence(second_part)}\':x=(w-tw)/2:y=(h-th)/2:fontsize=w/10:fontcolor=white:fontfile={os.path.join(input_path, "fonts/KudryashevDisplay/fontspring-demo-kdp45.otf")}:enable=\'between(t,10,{duration})\':box=1:boxcolor=black:boxborderw=10:line_spacing=10,\
-    drawtext=text=\'@{account_name}\':x=(w-tw)/2:y=4*(h-th)/5:fontsize=w/25:fontcolor=white:fontfile={os.path.join(input_path, "fonts/Poppins/Poppins-Regular.ttf")}" -c:v libx264 -c:a copy \'{output_file}\'', 
-    shell= True, stderr=subprocess.DEVNULL
+    drawtext=text=\'@{account_name}\':x=(w-tw)/2:y=4*(h-th)/5:fontsize=w/25:fontcolor=white:fontfile={os.path.join(input_path, "fonts/Poppins/Poppins-Regular.ttf")}" -c:v libx264 -c:a aac \'{output_file}\'', 
+    shell= True
   )
   if not os.path.exists(output_file) or (os.path.exists(output_file) and os.path.getsize(output_file) == 0):
     raise Exception(f'Generating {first_part} not succeeded !')
@@ -42,7 +42,8 @@ def generate_video(theme: str, first_part: str, second_part: str, video_path: st
 if not os.path.exists(output_path):
   os.mkdir(output_path)
 
-with open('data.csv', 'r') as csv_file:
+data_path = os.path.join(input_path, 'data.csv')
+with open(data_path, 'r') as csv_file:
   duration = 11.5
   # Reads inputs
   video_folder = os.path.join(input_path, 'videos')
@@ -56,10 +57,9 @@ with open('data.csv', 'r') as csv_file:
   for row in csv_reader:
     theme, first_part, second_part = row
     print(f'Generating {first_part}')
-    audio_path = generate_long_audio(model, sentence, duration, topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=10)
+    audio_path = os.path.join(os.path.dirname(__file__), 'music_output', generate_long_audio(model, sentence, duration, topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=10, fade=False))
     video_path = os.path.join(video_folder, random.choice(file_list))
     try:
       generate_video(theme, first_part, second_part, video_path, audio_path, duration)
     except Exception as e:
       print(e)
-    break
