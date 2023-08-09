@@ -24,8 +24,7 @@ def generate_video(theme: str, first_part: str, second_part: str, video_path: st
   result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
   current_duration = float(result.stdout.strip())
   if current_duration < duration:
-    print('Video should durate more than 11,5 sec')
-    return
+    raise Exception('Video should durate more than 11,5 sec')
 
   # Generates video
   output_file = os.path.join(output_path, f'{cleaned_sentence(first_part, True)}.mp4')
@@ -34,7 +33,7 @@ def generate_video(theme: str, first_part: str, second_part: str, video_path: st
     drawtext=text=\'{cleaned_sentence(first_part)}\':x=(w-tw)/2:y=(h-th)/2:fontsize=w/10:fontcolor=white:fontfile={os.path.join(input_path, "fonts/KudryashevDisplay/fontspring-demo-kdp45.otf")}:enable=\'between(t,0,9)\':box=1:boxcolor=black:boxborderw=10:line_spacing=10,\
     drawtext=text=\'{cleaned_sentence(second_part)}\':x=(w-tw)/2:y=(h-th)/2:fontsize=w/10:fontcolor=white:fontfile={os.path.join(input_path, "fonts/KudryashevDisplay/fontspring-demo-kdp45.otf")}:enable=\'between(t,10,{duration})\':box=1:boxcolor=black:boxborderw=10:line_spacing=10,\
     drawtext=text=\'@{account_name}\':x=(w-tw)/2:y=4*(h-th)/5:fontsize=w/25:fontcolor=white:fontfile={os.path.join(input_path, "fonts/Poppins/Poppins-Regular.ttf")}" -c:v libx264 -c:a aac \'{output_file}\'', 
-    shell= True
+    shell= True, stderr=subprocess.DEVNULL
   )
   if not os.path.exists(output_file) or (os.path.exists(output_file) and os.path.getsize(output_file) == 0):
     raise Exception(f'Generating {first_part} not succeeded !')
@@ -52,11 +51,12 @@ with open(data_path, 'r') as csv_file:
   csv_reader = csv.reader(csv_file, delimiter=';')
   next(csv_reader)
   # Create song model
+  print('Generating model')
   model = create_model()
   sentence = 'chill love piano song'
   for row in csv_reader:
     theme, first_part, second_part = row
-    print(f'Generating {first_part}')
+    print(f'Generating {first_part} ...')
     audio_path = os.path.join(os.path.dirname(__file__), 'music_output', generate_long_audio(model, sentence, duration, topk=250, topp=0, temperature=1.0, cfg_coef=3.0, overlap=10, fade=False))
     video_path = os.path.join(video_folder, random.choice(file_list))
     try:
