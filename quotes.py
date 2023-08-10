@@ -1,6 +1,5 @@
 import os
 import subprocess
-from datetime import datetime
 import csv
 import random
 import textwrap
@@ -8,6 +7,7 @@ from music import create_model, generate_long_audio
 
 account_name = 'quotes.musaic'
 input_path = os.path.join(os.path.dirname(__file__), 'input')
+hashtags_path = os.path.join(os.path.dirname(__file__), 'hashtags')
 output_path = os.path.join(os.path.dirname(__file__), 'video_output')
 
 def cleaned_sentence(sentence: str, is_filename: bool = False) -> str:
@@ -27,7 +27,9 @@ def generate_video(theme: str, first_part: str, second_part: str, video_path: st
     raise Exception('Video should durate more than 11,5 sec')
 
   # Generates video
-  output_file = os.path.join(output_path, f'{cleaned_sentence(first_part, True)}.mp4')
+  output_file = ''
+  with open(os.path.join(hashtags_path, 'quotes.txt'), 'r') as quotes:
+    output_file = os.path.join(output_path, f'{cleaned_sentence(first_part, True)} {quotes.readline()}.mp4')
   subprocess.run(f'ffmpeg -i {video_path} -i {audio_path} -t {duration} -vf "\
     drawtext=text=\'{cleaned_sentence(theme.upper())}\':x=(w-tw)/2:y=(h-th)/5:fontsize=w/20:fontcolor=white:fontfile={os.path.join(input_path, "fonts/Poppins/Poppins-Regular.ttf")},\
     drawtext=text=\'{cleaned_sentence(first_part)}\':x=(w-tw)/2:y=(h-th)/2:fontsize=w/10:fontcolor=white:fontfile={os.path.join(input_path, "fonts/KudryashevDisplay/fontspring-demo-kdp45.otf")}:enable=\'between(t,0,9)\':box=1:boxcolor=black:boxborderw=10:line_spacing=10,\
